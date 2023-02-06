@@ -4,11 +4,11 @@
 
 ## Contents
 
-  1. [How many users are there?](1.-How-many-users-are-there?)
+  1. [How many users are there?](#1-how-many-users-are-there)
+  2. [How many cookies does each user have on average?](2-What-is-the-unique-number-of-visits-by-all-users-per-month)
 
 
-
-### **1. How many users are there?**
+### **1. How many users are there**
 
 
 ### **2. How many cookies does each user have on average?
