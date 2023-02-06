@@ -85,11 +85,46 @@ WHERE ei.event_name='Purchase'
 
 ![image](https://user-images.githubusercontent.com/35038779/217049753-44813180-71fb-4faa-844b-c84252ac5305.png)
 
+* Percentage of purchase event visits equals 49 %
 
 ### 6. What is the percentage of visits which view the checkout page but do not have a purchase event?
 
+````sql
+WITH checkout_purchase AS (
+SELECT 
+  visit_id,
+  MAX(CASE WHEN event_type = 1 AND page_id = 12 THEN 1 ELSE 0 END) AS checkout,
+  MAX(CASE WHEN event_type = 3 THEN 1 ELSE 0 END) AS purchase
+FROM clique_bait.events
+GROUP BY visit_id)
+
+SELECT 
+  ROUND(100 * (1-(SUM(purchase)::numeric/SUM(checkout))),2) AS percentage_checkout_view_with_no_purchase
+FROM checkout_purchase
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217055633-c5040d28-59a6-4c7c-af6a-9201dd5dfd32.png)
+
+* Percentage of of visits with page checkout but without purchase equals 15.5 %
+
 
 ### 7. What are the top 3 pages by number of views?
+
+
+````sql
+SELECT 
+  ph.page_name, 
+  COUNT(*) AS page_views
+FROM clique_bait.events AS e
+JOIN clique_bait.page_hierarchy AS ph
+  ON e.page_id = ph.page_id
+WHERE e.event_type = 1 
+GROUP BY ph.page_name
+ORDER BY page_views DESC 
+LIMIT 3
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217057193-3a1ff64a-b96b-4eab-87e0-49d6fdac7fee.png)
 
 
 ### 8. What is the number of views and cart adds for each product category?
