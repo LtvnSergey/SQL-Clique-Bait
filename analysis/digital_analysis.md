@@ -44,8 +44,31 @@ FROM
 
 ### 3. What is the unique number of visits by all users per month?
 
+````sql
+SELECT 
+ EXTRACT(MONTH FROM EVENT_TIME) AS month,
+ COUNT(DISTINCT(VISIT_ID)) AS NUMBER_OF_VISITS
+FROM CLIQUE_BAIT.EVENTS
+GROUP BY EXTRACT(MONTH FROM EVENT_TIME)
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217043407-2966f15f-bcfb-4adc-bef2-52288ae3cac7.png)
+
+
 
 ### 4. What is the number of events for each event type?
+
+````sql
+SELECT 
+ EVENT_TYPE AS EVENT_TYPE,
+ COUNT(*) AS NUMBER_OF_EVENT_TYPES
+FROM CLIQUE_BAIT.EVENTS
+GROUP BY EVENT_TYPE
+ORDER BY EVENT_TYPE
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217044208-cb4fe60c-62b8-4139-8176-4611b9609154.png)
+
 
 
 ### 5. What is the percentage of visits which have a purchase event?
