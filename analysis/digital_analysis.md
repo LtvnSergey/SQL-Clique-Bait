@@ -73,6 +73,18 @@ ORDER BY EVENT_TYPE
 
 ### 5. What is the percentage of visits which have a purchase event?
 
+````sql
+SELECT 100 * COUNT(DISTINCT(e.visit_id)) /
+	(SELECT COUNT(DISTINCT(visit_id)) FROM CLIQUE_BAIT.EVENTS) AS purchase_percent
+FROM CLIQUE_BAIT.EVENTS AS e
+LEFT JOIN 
+CLIQUE_BAIT.EVENT_IDENTIFIER AS ei
+ON e.event_type = ei.event_type
+WHERE ei.event_name='Purchase'
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217049753-44813180-71fb-4faa-844b-c84252ac5305.png)
+
 
 ### 6. What is the percentage of visits which view the checkout page but do not have a purchase event?
 
