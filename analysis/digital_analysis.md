@@ -129,5 +129,64 @@ LIMIT 3
 
 ### 8. What is the number of views and cart adds for each product category?
 
+````sql
+SELECT 
+  ph.product_category, 
+  SUM(CASE WHEN e.event_type = 1 THEN 1 ELSE 0 END) AS page_views,
+  SUM(CASE WHEN e.event_type = 2 THEN 1 ELSE 0 END) AS cart_adds
+FROM clique_bait.events AS e
+JOIN clique_bait.page_hierarchy AS ph
+  ON e.page_id = ph.page_id
+WHERE ph.product_category IS NOT NULL
+GROUP BY ph.product_category
+ORDER BY page_views DESC
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217316337-62595d19-df94-49ba-8828-64259a1d3148.png)
+
 
 ### 9. What are the top 3 products by purchases?
+
+````sql
+with ordered_rows AS(
+    SELECT
+      page_name,
+      event_name,
+      COUNT(event_name) AS number_of_purchases,
+      ROW_NUMBER() OVER (
+        ORDER BY
+          COUNT(event_name) DESC
+      ) AS row
+    FROM
+      events AS e
+      JOIN page_hierarchy AS pe ON e.page_id = pe.page_id
+      JOIN event_identifier AS ei ON e.event_type = ei.event_type
+    WHERE
+      visit_id in (
+        SELECT
+          distinct visit_id
+        FROM
+          events AS ee
+        WHERE
+          event_type = 3
+      )
+      AND product_id > 0
+      AND event_name = 'Add to Cart'
+    GROUP BY
+      1,
+      2
+  )
+SELECT
+  page_name,
+  number_of_purchases
+FROM
+  ordered_rows
+WHERE
+  row in (1, 2, 3)
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217320650-600abe7a-c37d-401d-ae4c-a7c05ae3a361.png)
+
+
+
+
