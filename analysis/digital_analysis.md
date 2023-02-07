@@ -185,7 +185,8 @@ WHERE
   row in (1, 2, 3)
 ````
 
-![image](https://user-images.githubusercontent.com/35038779/217320650-600abe7a-c37d-401d-ae4c-a7c05ae3a361.png)
+![image](https://user-images.githubusercontent.com/35038779/217320804-032fdfca-22f4-4105-89f8-357d6105c7f2.png)
+
 
 
 
