@@ -1,6 +1,6 @@
 # Project: Clique-Bait
 
-# Digital Analysis
+# Product Funnel Analysis
 
 ## Questions
 
@@ -62,7 +62,11 @@ WITH 	events_products AS (
 	purchased AS (
 		SELECT page_name, COUNT(*) AS purchased
 		FROM events_products
-		WHERE visit_id IN 
+
+		WHERE event_type IN 
+			(SELECT event_type FROM clique_bait.event_identifier 
+			 WHERE event_name='Add to Cart')
+		AND visit_id IN 
 			(SELECT DISTINCT(visit_id) FROM clique_bait.events
 			 WHERE event_type IN 
 				(SELECT event_type FROM clique_bait.event_identifier 
@@ -83,8 +87,7 @@ SELECT *
 FROM combined
 ````
 
-![image](https://user-images.githubusercontent.com/35038779/217545109-2862dce9-d1b8-4032-ba51-48a29a8df00d.png)
-
+![image](https://user-images.githubusercontent.com/35038779/217620673-b53e2e4c-9e73-4ab6-a7bf-3af9f3d44488.png)
 
 
 ### 2. Which product had the most views, cart adds, purchases, most likely to be abandoned?
@@ -115,7 +118,7 @@ FROM combined
 ORDER BY purchased DESC
 LIMIT 1
 ````
-![image](https://user-images.githubusercontent.com/35038779/217540429-e9038c8c-98f7-4ea8-92d3-3eb971b183aa.png)
+![image](https://user-images.githubusercontent.com/35038779/217620853-b9c4e145-dc2f-459a-953e-22ce34c7229f.png)
 
 
 ````sql
@@ -134,6 +137,16 @@ LIMIT 1
 
 
 ### 3. Which product had the highest view to purchase percentage?
+
+````sql
+SELECT page_name, 100 * purchased/page_view AS purchase_per_view_percentage
+FROM combined
+ORDER BY purchase_per_view_percentage DESC
+LIMIT 1
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217621035-d1bdcb5a-8574-4bbd-a0c2-a49278bc011b.png)
+
 
 ### 4. What is the average conversion rate from view to cart add?
 
