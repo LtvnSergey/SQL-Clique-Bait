@@ -5,11 +5,10 @@
 ## Questions
 
   1. [How many times was each product: viewed, aded to cart, abandoned, purchased?](#1-how-many-times-was-each-product-viewed-aded-to-cart-abandoned-purchased)
-  2. [Which product had the most views, cart adds and purchases?](#5-which-product-had-the-most-views,-cart-adds-and-purchases)
-  3. [Which product was most likely to be abandoned?](#6-which-product-was-most-likely-to-be-abandoned)
-  4. [Which product had the highest view to purchase percentage?](#7-which-product-had-the-highest-view-to-purchase-percentage)
-  5. [What is the average conversion rate from view to cart add?](#8-what-is-the-average-conversion-rate-from-view-to-cart-add)
-  6. [What is the average conversion rate from cart add to purchase?](#9-what-is-the-average-conversion-rate-from-cart-add-to-purchase)
+  2. [Which product had the most views, cart adds, purchases, most likely to be abandoned?](#2-which-product-had-the-most-views-cart-adds-purchases-most-likely-to-be-abandoned)
+  3. [Which product had the highest view to purchase percentage?](#3-which-product-had-the-highest-view-to-purchase-percentage)
+  4. [What is the average conversion rate from view to cart add?](#4-what-is-the-average-conversion-rate-from-view-to-cart-add)
+  5. [What is the average conversion rate from cart add to purchase?](#5-what-is-the-average-conversion-rate-from-cart-add-to-purchase)
 
 
 ### 1. How many times was each product: viewed, aded to cart, abandoned, purchased?
@@ -52,7 +51,7 @@ WITH 	events_products AS (
 			 WHERE event_name='Add to Cart')
 		AND
 			visit_id NOT IN 
-			(SELECT DISTINCT(visit_id) FROM events_products
+			(SELECT DISTINCT(visit_id) FROM clique_bait.events
 			 WHERE event_type IN 
 				(SELECT event_type FROM clique_bait.event_identifier 
 				 WHERE event_name='Purchase'))	
@@ -84,15 +83,58 @@ SELECT *
 FROM combined
 ````
 
-![image](https://user-images.githubusercontent.com/35038779/217338052-1dab0c30-c236-4fa5-b301-41a1f260179c.png)
+![image](https://user-images.githubusercontent.com/35038779/217545109-2862dce9-d1b8-4032-ba51-48a29a8df00d.png)
 
 
-### 5. Which product had the most views, cart adds and purchases?
 
-### 6. Which product was most likely to be abandoned?
+### 2. Which product had the most views, cart adds, purchases, most likely to be abandoned?
 
-### 7. Which product had the highest view to purchase percentage?
+````sql
+/* Product with most views */
+SELECT page_name, page_view
+FROM combined
+ORDER BY page_view DESC
+LIMIT 1
+````
+![image](https://user-images.githubusercontent.com/35038779/217539829-e7476afc-9cd9-4055-b3a6-36ba31de291b.png)
 
-### 8. What is the average conversion rate from view to cart add?
 
-### 9. What is the average conversion rate from cart add to purchase?
+````sql
+/* Product with most cart adds */
+SELECT page_name, add_cart
+FROM combined
+ORDER BY add_cart DESC
+LIMIT 1
+````
+![image](https://user-images.githubusercontent.com/35038779/217540059-fbf94811-dbf7-42a3-9a0c-9759eacdfb72.png)
+
+````sql
+/* Product with most purchases */
+SELECT page_name, purchased
+FROM combined
+ORDER BY purchased DESC
+LIMIT 1
+````
+![image](https://user-images.githubusercontent.com/35038779/217540429-e9038c8c-98f7-4ea8-92d3-3eb971b183aa.png)
+
+
+````sql
+/* Product most likely to be adandoned */
+SELECT page_name, abandoned
+FROM combined
+ORDER BY abandoned DESC
+LIMIT 1
+````
+![image](https://user-images.githubusercontent.com/35038779/217545293-e64a4bd3-6290-4a4b-b006-78f45d37c7c4.png)
+
+* Product with most views: Oyster
+* Product with most cart adds: Lobster
+* Product with most purchases: Lobster
+* Product most likely to be adandoned: Russian Caviar
+
+
+### 3. Which product had the highest view to purchase percentage?
+
+### 4. What is the average conversion rate from view to cart add?
+
+### 5. What is the average conversion rate from cart add to purchase?
