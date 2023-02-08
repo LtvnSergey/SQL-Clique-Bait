@@ -75,7 +75,7 @@ WITH 	events_products AS (
 	),
 	
 	/* Combine tables with viewed, added to cart, abandoned, purchased products */
-	combined AS (
+	product_summary AS (
 		SELECT viewed.page_name, viewed.page_view, add_cart.add_cart, abandoned.abandoned, purchased.purchased
 		FROM viewed 
 		JOIN add_cart ON viewed.page_name = add_cart.page_name
@@ -84,7 +84,7 @@ WITH 	events_products AS (
 	)
 	
 SELECT *
-FROM combined
+FROM product_summary
 ````
 
 ![image](https://user-images.githubusercontent.com/35038779/217620673-b53e2e4c-9e73-4ab6-a7bf-3af9f3d44488.png)
@@ -95,7 +95,7 @@ FROM combined
 ````sql
 /* Product with most views */
 SELECT page_name, page_view
-FROM combined
+FROM product_summary
 ORDER BY page_view DESC
 LIMIT 1
 ````
@@ -105,7 +105,7 @@ LIMIT 1
 ````sql
 /* Product with most cart adds */
 SELECT page_name, add_cart
-FROM combined
+FROM product_summary
 ORDER BY add_cart DESC
 LIMIT 1
 ````
@@ -114,7 +114,7 @@ LIMIT 1
 ````sql
 /* Product with most purchases */
 SELECT page_name, purchased
-FROM combined
+FROM product_summary
 ORDER BY purchased DESC
 LIMIT 1
 ````
@@ -124,7 +124,7 @@ LIMIT 1
 ````sql
 /* Product most likely to be adandoned */
 SELECT page_name, abandoned
-FROM combined
+FROM product_summary
 ORDER BY abandoned DESC
 LIMIT 1
 ````
@@ -140,7 +140,7 @@ LIMIT 1
 
 ````sql
 SELECT page_name, 100 * purchased/page_view AS purchase_per_view_percentage
-FROM combined
+FROM product_summary
 ORDER BY purchase_per_view_percentage DESC
 LIMIT 1
 ````
@@ -150,4 +150,20 @@ LIMIT 1
 
 ### 4. What is the average conversion rate from view to cart add?
 
+````sql
+SELECT ROUND(AVG(100*add_cart::decimal/page_view::decimal), 2) AS avg_add_cart_per_view_conversion
+FROM product_summary
+````
+![image](https://user-images.githubusercontent.com/35038779/217623168-e8c58238-dc3f-46f7-8852-8bd136003866.png)
+
+
 ### 5. What is the average conversion rate from cart add to purchase?
+
+````sql
+SELECT ROUND(AVG(100*purchased::decimal/add_cart::decimal), 2) AS avg_purchase_per_add_cart
+FROM product_summary
+````
+
+
+![image](https://user-images.githubusercontent.com/35038779/217623449-df58829b-aa1f-444a-8834-181088903a46.png)
+
