@@ -76,7 +76,11 @@ WITH 	events_products AS (
 	
 	/* Combine tables with viewed, added to cart, abandoned, purchased products */
 	product_summary AS (
-		SELECT viewed.page_name, viewed.page_view, add_cart.add_cart, abandoned.abandoned, purchased.purchased
+		SELECT viewed.page_name, 
+		       viewed.page_view, 
+		       add_cart.add_cart, 
+		       abandoned.abandoned, 
+		       purchased.purchased
 		FROM viewed 
 		JOIN add_cart ON viewed.page_name = add_cart.page_name
 		JOIN abandoned ON add_cart.page_name = abandoned.page_name
