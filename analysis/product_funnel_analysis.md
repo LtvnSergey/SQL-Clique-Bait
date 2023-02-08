@@ -156,6 +156,7 @@ FROM product_summary
 ````
 ![image](https://user-images.githubusercontent.com/35038779/217623168-e8c58238-dc3f-46f7-8852-8bd136003866.png)
 
+* Average conversion rate from view to cart add: 60.95 %
 
 ### 5. What is the average conversion rate from cart add to purchase?
 
@@ -163,7 +164,6 @@ FROM product_summary
 SELECT ROUND(AVG(100*purchased::decimal/add_cart::decimal), 2) AS avg_purchase_per_add_cart
 FROM product_summary
 ````
-
-
 ![image](https://user-images.githubusercontent.com/35038779/217623449-df58829b-aa1f-444a-8834-181088903a46.png)
 
+* Average conversion rate from cart add to purchase: 75.93 %
