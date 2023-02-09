@@ -86,7 +86,7 @@ SELECT
 FROM user_summary
 WHERE sum_impression = 1  /* 1 - in case user had ad impression, 0 - otherwise
 GROUP BY campaign_name
-
+````
 
 * Summary for users who had 'Ad Impression':
 
