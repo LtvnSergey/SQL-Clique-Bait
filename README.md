@@ -5,9 +5,20 @@
 # Overview
 The goal of the project is to analyse and calculate funnal fallout rates for Clique Bait online seafood store. 
 
+The project is based on [SQL-8-week-challenge](https://8weeksqlchallenge.com/case-study-6/) case. 
 
 ## Contents
-- 
+- (Project workflow)[#project-workflow]
+- (Data description)[#data-description]
+
+
+### Project workflow
+
+  1. Setting up PostgresSQL server 
+  2. Create project database and load (schemas with input tables)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/input.md]
+  3. (Digit analysis)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/digital_analysis.md]
+  4. (Product funnel analysis)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/product_funnel_analysis.md]
+  5. (Campaigns analysis)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/campaigns_analysis.md]
 
 
 ### Data description
@@ -52,3 +63,4 @@ This table lists all of the pages on the Clique Bait website which are tagged an
 * **Entity Relationship Diagram**:
 
 <img src="https://user-images.githubusercontent.com/35038779/217026508-fbcf5de1-463b-4450-8dd4-9c07aeaac714.png" alt="Image" width="1500" height="520">
+
