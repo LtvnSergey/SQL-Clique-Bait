@@ -8,17 +8,19 @@ The goal of the project is to analyse and calculate funnal fallout rates for Cli
 The project is based on [SQL-8-week-challenge](https://8weeksqlchallenge.com/case-study-6/) case. 
 
 ## Contents
-- (Project workflow)[#project-workflow]
-- (Data description)[#data-description]
+
+- [Project workflow](#project-workflow)
+- [Data description](#data-description)
+- [Modules and tools](#modules-and-tools)
 
 
 ### Project workflow
 
   1. Setting up PostgresSQL server 
-  2. Create project database and load (schemas with input tables)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/input.md]
-  3. (Digit analysis)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/digital_analysis.md]
-  4. (Product funnel analysis)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/product_funnel_analysis.md]
-  5. (Campaigns analysis)[https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/campaigns_analysis.md]
+  2. [Create project database and load schemas with input tables](https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/input.md)
+  3. [Digit analysis](https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/digital_analysis.md)
+  4. [Product funnel analysis](https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/product_funnel_analysis.md)
+  5. [Campaigns analysis](https://github.com/LtvnSergey/SQL-Clique-Bait/blob/main/analysis/campaigns_analysis.md)
 
 
 ### Data description
@@ -64,3 +66,7 @@ This table lists all of the pages on the Clique Bait website which are tagged an
 
 <img src="https://user-images.githubusercontent.com/35038779/217026508-fbcf5de1-463b-4450-8dd4-9c07aeaac714.png" alt="Image" width="1500" height="520">
 
+
+### Modules and tools
+
+PostgresSQL | PgAdmin 4
