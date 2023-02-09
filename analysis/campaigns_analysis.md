@@ -2,9 +2,17 @@
 
 # Campaigns Analysis
 
-## Problem
+## Contents
+
+ 1. [Generate visit summary table](#1-generate-visit-summary-table)
+ 2. [Campaign metrics analysis](#2-campaign-metrics-analysis)
+
+---
+
+### 1. Generate visit summary table
 
 Generate a table that has 1 single row for every unique visit_id record and has the following columns:
+
 - `user_id`
 - `visit_id`
 - `visit_start_time`: the earliest event_time for each visit
@@ -52,7 +60,11 @@ FROM product_campaing_summary
 
 ![image](https://user-images.githubusercontent.com/35038779/217762488-711b41f7-2782-4de2-b3de-60a16bde2e4a.png)
 
+---
 
+### 2. Campaign metrics analysis
+
+- Identifying users who have received impressions during each campaign period and comparing each metric with other users who did not have an impression event
 
 
 ````sql
@@ -74,28 +86,28 @@ WITH user_summary AS (
 /* Calculate average and total metrics for different campagns */
 SELECT 
 	campaign_name,
-	COUNT(DISTINCT(user_id)) AS number_of_users,
-	ROUND(AVG(sum_page_views)) AS avg_page_views,
-	ROUND(AVG(sum_cart_adds)) AS avg_cart_adds,
-	ROUND(AVG(sum_purchase)) AS avg_purchase,
-	ROUND(AVG(sum_click)) AS avg_click,
-	SUM(sum_page_views) AS total_page_views,
-	SUM(sum_cart_adds) AS toal_cart_adds,
-	SUM(sum_purchase) AS total_purchase,
-	SUM(sum_click) AS total_click,
-	ROUND(100*SUM(sum_purchase)/SUM(sum_cart_adds)) AS purchase_per_add_cart
+	ROUND(SUM(sum_page_views)/COUNT(DISTINCT(user_id)),1) AS page_views_per_user_rate,
+	ROUND(SUM(sum_cart_adds)/COUNT(DISTINCT(user_id)),1) AS toal_cart_adds_per_user_rate,
+	ROUND(SUM(sum_purchase)/COUNT(DISTINCT(user_id)),1) AS total_purchase_per_user_rate,
+	ROUND(SUM(sum_click)/COUNT(DISTINCT(user_id)),1) AS total_click_per_user_rate
 FROM user_summary
-WHERE sum_impression = 1  /* 1 - in case user had ad impression, 0 - otherwise */
+WHERE campaign_name IS NOT NULL AND sum_impression = 1 /* 1 - in case user had ad impression, 0 - otherwise */
 GROUP BY campaign_name
 ````
 
 * Summary for users who had 'Ad Impression':
 
-![image](https://user-images.githubusercontent.com/35038779/217806483-eeb5767d-ae2b-4ed6-8c91-a29fb77af725.png)
+![image](https://user-images.githubusercontent.com/35038779/217814312-b6edbfd5-a0fe-4572-96a9-d478549e3398.png)
 
 
 * Summary for users who had no 'Ad Impression':
 
-![image](https://user-images.githubusercontent.com/35038779/217806308-4d476e52-fb83-4627-b42a-f11b0b083711.png)
+![image](https://user-images.githubusercontent.com/35038779/217814253-d7207a9e-5e64-43f8-8055-29ea2dfa9c5d.png)
+
+
+As we can tell from two tables above for campangs with 'Ad Impression' and without it:
+	1. Adding 'Ad Impression' increased every metric
+	2. Purchase rate is two times more for users with 'Ad Impression'
+	3. Campaign 'Half Off - Treat Your Shelf' - showed the best results among others 
 
 
