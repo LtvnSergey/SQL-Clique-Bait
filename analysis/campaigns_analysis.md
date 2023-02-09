@@ -84,30 +84,38 @@ WITH user_summary AS (
 	
 	
 /* Calculate average and total metrics for different campagns */
-SELECT 
-	campaign_name,
-	ROUND(SUM(sum_page_views)/COUNT(DISTINCT(user_id)),1) AS page_views_per_user_rate,
-	ROUND(SUM(sum_cart_adds)/COUNT(DISTINCT(user_id)),1) AS toal_cart_adds_per_user_rate,
-	ROUND(SUM(sum_purchase)/COUNT(DISTINCT(user_id)),1) AS total_purchase_per_user_rate,
-	ROUND(SUM(sum_click)/COUNT(DISTINCT(user_id)),1) AS total_click_per_user_rate
-FROM user_summary
-WHERE campaign_name IS NOT NULL AND sum_impression = 1 /* 1 - in case user had ad impression, 0 - otherwise */
-GROUP BY campaign_name
+SELECT campaign_name,impression,
+	   ROUND(SUM(page_views)/COUNT(DISTINCT(visit_id)), 2) AS page_views_per_visit,
+	   ROUND(SUM(cart_adds)/COUNT(DISTINCT(visit_id)), 2) AS cart_add_per_visit,
+	   ROUND(SUM(purchase)/COUNT(DISTINCT(visit_id)), 2) AS purchase_per_visit,
+	   ROUND(SUM(click)/COUNT(DISTINCT(visit_id)), 2) AS click_per_visit
+
+FROM product_campaing_summary
+WHERE campaign_name IS NOT NULL
+GROUP BY campaign_name, impression
 ````
-
-* Summary for users who had 'Ad Impression':
-
-![image](https://user-images.githubusercontent.com/35038779/217814312-b6edbfd5-a0fe-4572-96a9-d478549e3398.png)
+![image](https://user-images.githubusercontent.com/35038779/217835564-acaa3a50-185a-4a56-8749-aab49dd8af74.png)
 
 
-* Summary for users who had no 'Ad Impression':
-
-![image](https://user-images.githubusercontent.com/35038779/217814253-d7207a9e-5e64-43f8-8055-29ea2dfa9c5d.png)
-
-
-As we can tell from two tables above for campangs with 'Ad Impression' and without it:
+- As we can tell from table above for campangs with 'Ad Impression' and without it:
 	1. Adding 'Ad Impression' increased every metric
 	2. Purchase rate is two times more for users with 'Ad Impression'
-	3. Campaign 'Half Off - Treat Your Shelf' - showed the best results among others 
 
+--
 
+- Lets check whereever clicking on an impression lead to higher purchase rates
+
+````sql
+SELECT campaign_name,
+	   click,
+	   ROUND(SUM(purchase)/COUNT(DISTINCT(visit_id)), 2) AS purchase_per_visit
+FROM product_campaing_summary
+WHERE impression=1 AND campaign_name IS NOT NULL
+GROUP BY campaign_name, click
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217837565-89920598-32d7-4bdc-9f5a-671c81c13f8c.png)
+
+- According to the table above - clicking on an impression lead to higher purchase rates
+
+- More significantly this effect is pronounced for campaigns 'BOGOF - Fishing For Compliments' and 'Half Off - Treat Your Shellf(ish)'
