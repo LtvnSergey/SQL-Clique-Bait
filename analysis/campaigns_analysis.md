@@ -85,7 +85,7 @@ SELECT
 	SUM(sum_click) AS total_click,
 	ROUND(100*SUM(sum_purchase)/SUM(sum_cart_adds)) AS purchase_per_add_cart
 FROM user_summary
-WHERE sum_impression = 1  /* 1 - in case user had ad impression, 0 - otherwise
+WHERE sum_impression = 1  /* 1 - in case user had ad impression, 0 - otherwise */
 GROUP BY campaign_name
 ````
 
