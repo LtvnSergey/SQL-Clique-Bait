@@ -67,22 +67,7 @@ FROM product_campaing_summary
 - Identifying users who have received impressions during each campaign period and comparing each metric with other users who did not have an impression event
 
 
-````sql
-/* Summarize metrics for each user during different campagns */
-WITH user_summary AS (
-	SELECT 
-		campaign_name,	
-		user_id,
-		SUM(page_views) AS sum_page_views,
-		SUM(cart_adds) AS sum_cart_adds,
-		SUM(purchase) AS sum_purchase,
-		SUM(click) AS sum_click,
-		SUM(impression) AS sum_impression
-	FROM product_campaing_summary
-	GROUP BY campaign_name, user_id
-	)
-	
-	
+````sql	
 /* Calculate average and total metrics for different campagns */
 SELECT campaign_name,impression,
 	   ROUND(SUM(page_views)/COUNT(DISTINCT(visit_id)), 2) AS page_views_per_visit,
@@ -101,7 +86,7 @@ GROUP BY campaign_name, impression
 	1. Adding 'Ad Impression' increased every metric
 	2. Purchase rate is two times more for users with 'Ad Impression'
 
---
+---
 
 - Lets check whereever clicking on an impression lead to higher purchase rates
 
