@@ -52,3 +52,48 @@ FROM product_campaing_summary
 
 ![image](https://user-images.githubusercontent.com/35038779/217762488-711b41f7-2782-4de2-b3de-60a16bde2e4a.png)
 
+
+
+
+````sql
+/* Summarize metrics for each user during different campagns */
+WITH user_summary AS (
+	SELECT 
+		campaign_name,	
+		user_id,
+		SUM(page_views) AS sum_page_views,
+		SUM(cart_adds) AS sum_cart_adds,
+		SUM(purchase) AS sum_purchase,
+		SUM(click) AS sum_click,
+		SUM(impression) AS sum_impression
+	FROM product_campaing_summary
+	GROUP BY campaign_name, user_id
+	)
+	
+	
+/* Calculate average and total metrics for different campagns */
+SELECT 
+	campaign_name,
+	COUNT(DISTINCT(user_id)) AS number_of_users,
+	ROUND(AVG(sum_page_views)) AS avg_page_views,
+	ROUND(AVG(sum_cart_adds)) AS avg_cart_adds,
+	ROUND(AVG(sum_purchase)) AS avg_purchase,
+	ROUND(AVG(sum_click)) AS avg_click,
+	SUM(sum_page_views) AS total_page_views,
+	SUM(sum_cart_adds) AS toal_cart_adds,
+	SUM(sum_purchase) AS total_purchase,
+	SUM(sum_click) AS total_click
+FROM user_summary
+WHERE sum_impression = 1  /* 1 - in case user had ad impression, 0 - otherwise
+GROUP BY campaign_name
+
+
+* Summary for users who had 'Ad Impression':
+
+![image](https://user-images.githubusercontent.com/35038779/217804514-7ae915d6-5174-4161-8804-452774b935a9.png)
+
+* Summary for users who had no 'Ad Impression':
+
+![image](https://user-images.githubusercontent.com/35038779/217804582-a0909d73-7dba-4fe8-82af-e7f1ddf3edb5.png)
+
+
