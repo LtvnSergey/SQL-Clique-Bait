@@ -82,7 +82,8 @@ SELECT
 	SUM(sum_page_views) AS total_page_views,
 	SUM(sum_cart_adds) AS toal_cart_adds,
 	SUM(sum_purchase) AS total_purchase,
-	SUM(sum_click) AS total_click
+	SUM(sum_click) AS total_click,
+	ROUND(100*SUM(sum_purchase)/SUM(sum_cart_adds)) AS purchase_per_add_cart
 FROM user_summary
 WHERE sum_impression = 1  /* 1 - in case user had ad impression, 0 - otherwise
 GROUP BY campaign_name
@@ -90,10 +91,11 @@ GROUP BY campaign_name
 
 * Summary for users who had 'Ad Impression':
 
-![image](https://user-images.githubusercontent.com/35038779/217804514-7ae915d6-5174-4161-8804-452774b935a9.png)
+![image](https://user-images.githubusercontent.com/35038779/217806483-eeb5767d-ae2b-4ed6-8c91-a29fb77af725.png)
+
 
 * Summary for users who had no 'Ad Impression':
 
-![image](https://user-images.githubusercontent.com/35038779/217804582-a0909d73-7dba-4fe8-82af-e7f1ddf3edb5.png)
+![image](https://user-images.githubusercontent.com/35038779/217806308-4d476e52-fb83-4627-b42a-f11b0b083711.png)
 
 
