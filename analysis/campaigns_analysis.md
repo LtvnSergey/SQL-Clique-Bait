@@ -6,58 +6,38 @@
 
 
 
-WITH 
-	users_visits AS (
-		SELECT 
-			u.user_id,
-			e.visit_id,
-			MIN(event_time) OVER(PARTITION BY visit_id) AS visit_start_time,
-			e.event_type
-		FROM clique_bait.events AS e
-		LEFT JOIN
-		clique_bait.users AS u
-		ON e.cookie_id=u.cookie_id
-	),
-		
-	page_views AS (
-		SELECT visit_id, COUNT(*) AS views
-		FROM users_visits
-		WHERE event_type IN 
-			(SELECT event_type FROM clique_bait.event_identifier 
-			 WHERE event_name='Page View')
-		GROUP BY visit_id
-	),
-	
-	cart_adds AS (
-		SELECT visit_id, COUNT(*) AS cart_adds
-		FROM users_visits
-		WHERE event_type IN 
-			(SELECT event_type FROM clique_bait.event_identifier 
-			 WHERE event_name='Add to Cart')
-		GROUP BY visit_id
-	),
-	
-	purchase AS (
-		SELECT DISTINCT visit_id, 
-			CASE WHEN visit_id IN
-				(SELECT DISTINCT visit_id
-				FROM
-				(SELECT visit_id,
-					CASE WHEN event_type IN 
-						(SELECT event_type FROM clique_bait.event_identifier 
-						 WHERE event_name='Purchase') 
-						THEN 1 ELSE 0 END purchase
-				FROM users_visits) AS p
-				WHERE purchase = 1)
-				THEN 1 ELSE 0 END purchase
-		FROM users_visits
+````sql
+WITH 	
+    product_campaing_summary AS (
+	SELECT 
+	  u.user_id, e.visit_id, 
+	  MIN(e.event_time) AS visit_start_time,
+	  c.campaign_name,
+	  SUM(CASE WHEN e.event_type IN (SELECT event_type FROM clique_bait.event_identifier 
+					 WHERE event_name='Page View') THEN 1 ELSE 0 END) AS page_views,
+	  SUM(CASE WHEN e.event_type IN (SELECT event_type FROM clique_bait.event_identifier 
+					 WHERE event_name='Add to Cart') THEN 1 ELSE 0 END) AS cart_adds,
+	  SUM(CASE WHEN e.event_type IN (SELECT event_type FROM clique_bait.event_identifier 
+					 WHERE event_name='Purchase') THEN 1 ELSE 0 END) AS purchase,
+	  SUM(CASE WHEN e.event_type IN (SELECT event_type FROM clique_bait.event_identifier 
+					 WHERE event_name='Ad Impression') THEN 1 ELSE 0 END) AS impression, 
+	  SUM(CASE WHEN e.event_type IN (SELECT event_type FROM clique_bait.event_identifier 
+					 WHERE event_name='Ad Click') THEN 1 ELSE 0 END) AS click, 
+	  STRING_AGG(CASE WHEN p.product_id IS NOT NULL AND e.event_type = 2 THEN p.page_name ELSE NULL END, 
+		', ' ORDER BY e.sequence_number) AS cart_products
+	FROM clique_bait.users AS u
+	INNER JOIN clique_bait.events AS e
+	  ON u.cookie_id = e.cookie_id
+	LEFT JOIN clique_bait.campaign_identifier AS c
+	  ON e.event_time BETWEEN c.start_date AND c.end_date
+	LEFT JOIN clique_bait.page_hierarchy AS p
+	  ON e.page_id = p.page_id
+	GROUP BY u.user_id, e.visit_id, c.campaign_name
 	)
-	
-	campagn_name AS (
-		SELECT DISTINCT visit_id
-			campaing_name
-		FROM 
-	)
-	
+			
 SELECT * 
-FROM purchase
+FROM product_campaing_summary
+````
+
+![image](https://user-images.githubusercontent.com/35038779/217762488-711b41f7-2782-4de2-b3de-60a16bde2e4a.png)
+
